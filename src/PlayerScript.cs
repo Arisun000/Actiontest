@@ -25,26 +25,26 @@ public class PlayerScript : MonoBehaviour {
 	private bool gameClear = false; //ゲームクリアーしたら操作を無効にする
 	public Text clearText, titletext; //ゲームクリア時に表示するテキスト
 	
-	void Start () {
+	void Start (){
 		anim = GetComponent<Animator>();
 		rigidbody2D = GetComponent<Rigidbody2D>();
 		health = 3; // 初期体力をセット
+
 		// 初期体力をUIに表示
 		healthscript.SetPlayerHealthUI (health);
 
 		renderer = GetComponent<Renderer>();
 	}
 
-	void Update ()
-	{
+	void Update (){
 		if(health > 3) health = 3;
 		isGrounded = Physics2D.Linecast (
-		transform.position + transform.up * 1,
-		transform.position - transform.up * 0.05f,
-		groundLayer);
+			transform.position + transform.up * 1,
+			transform.position - transform.up * 0.05f,
+			groundLayer
+		);
 
-		if (jumpcount < MAX_JUMP && Input.GetKeyDown ("space"))
-		{
+		if (jumpcount < MAX_JUMP && Input.GetKeyDown ("space")){
 			isGrounded = false;
 			Jumpjudge = true;
 		}
@@ -56,58 +56,60 @@ public class PlayerScript : MonoBehaviour {
 		anim.SetBool("isFalling",isFalling);
 		if (isJumping == false && isFalling == false) anim.ResetTrigger("Jump");
 
-	if (!gameClear) {
-		if (Input.GetKeyDown ("left ctrl")){
-			anim.SetTrigger("Shot");
-			Instantiate(bullet, transform.position + new Vector3(0f,1.2f,0f), transform.rotation);
+		if (!gameClear) {
+			if (Input.GetKeyDown ("left ctrl")){
+				anim.SetTrigger("Shot");
+				Instantiate(bullet, transform.position + new Vector3(0f,1.2f,0f), transform.rotation);
+			}
 		}
-	}
 	}
 	
-	void FixedUpdate ()
-	{
-	if (!gameClear) {	
+	void FixedUpdate (){
 
-		if(Jumpjudge) {
-				anim.SetTrigger("Jump");
-				if(jumpcount == 1) {
-					anim.SetTrigger("DoubleJump");
-				}
-			rigidbody2D.velocity = Vector2.zero;
-			rigidbody2D.AddForce( Vector2.up * jumpPower);
-			jumpcount++;
-			Jumpjudge = false;
-		}
-		float x = Input.GetAxisRaw ("Horizontal");
-		if (x != 0) {
-			rigidbody2D.velocity = new Vector2 (x * speed, rigidbody2D.velocity.y);
-			Vector2 temp = transform.localScale;
-			temp.x = x;
-			transform.localScale = temp;
-			anim.SetBool ("Dash", true);
-				Vector3 cameraPos = mainCamera.transform.position;
-				cameraPos.x = transform.position.x + 4;
-				mainCamera.transform.position = cameraPos;
+		if (!gameClear) {	
 
-			Vector2 min = Camera.main.ViewportToWorldPoint(new Vector2(0, 0));
-			Vector2 max = Camera.main.ViewportToWorldPoint(new Vector2(1, 1));
-			Vector2 pos = transform.position;
-			pos.x = Mathf.Clamp(pos.x, min.x + 0.5f, max.x);
-			transform.position = pos;
+			if(Jumpjudge) {
+					anim.SetTrigger("Jump");
+					if(jumpcount == 1) {
+						anim.SetTrigger("DoubleJump");
+					}
+				rigidbody2D.velocity = Vector2.zero;
+				rigidbody2D.AddForce( Vector2.up * jumpPower);
+				jumpcount++;
+				Jumpjudge = false;
+			}
+
+			float x = Input.GetAxisRaw ("Horizontal");
+
+			if (x != 0) {
+				rigidbody2D.velocity = new Vector2 (x * speed, rigidbody2D.velocity.y);
+				Vector2 temp = transform.localScale;
+				temp.x = x;
+				transform.localScale = temp;
+				anim.SetBool ("Dash", true);
+					Vector3 cameraPos = mainCamera.transform.position;
+					cameraPos.x = transform.position.x + 4;
+					mainCamera.transform.position = cameraPos;
+
+				Vector2 min = Camera.main.ViewportToWorldPoint(new Vector2(0, 0));
+				Vector2 max = Camera.main.ViewportToWorldPoint(new Vector2(1, 1));
+				Vector2 pos = transform.position;
+				pos.x = Mathf.Clamp(pos.x, min.x + 0.5f, max.x);
+				transform.position = pos;
+			} else {
+				rigidbody2D.velocity = new Vector2 (0, rigidbody2D.velocity.y);
+				anim.SetBool ("Dash", false);
+			}
+
 		} else {
-			rigidbody2D.velocity = new Vector2 (0, rigidbody2D.velocity.y);
-			anim.SetBool ("Dash", false);
+			clearText.enabled = true;
+			titletext.enabled = true;
+			CallTitle();
 		}
-	} else {
-		clearText.enabled = true;
-		titletext.enabled = true;
-		CallTitle();
-	}
 	}
 
 
-	void OnCollisionEnter2D (Collision2D col)
-	{
+	void OnCollisionEnter2D (Collision2D col){
 		if (col.gameObject.tag == "Field") {
 			jumpcount = 0;
 			anim.ResetTrigger("DoubleJump");
@@ -122,8 +124,7 @@ public class PlayerScript : MonoBehaviour {
 		}
 	}
 
-		void OnTriggerEnter2D (Collider2D col)
-	{
+	void OnTriggerEnter2D (Collider2D col){
 		if (col.gameObject.tag == "Block") {
 			jumpcount = 0;
 			anim.ResetTrigger("DoubleJump");
@@ -134,8 +135,7 @@ public class PlayerScript : MonoBehaviour {
 		}
 	}
 
-	IEnumerator Damage ()
-	{
+	IEnumerator Damage (){
 		//レイヤーをPlayerDamageに変更
 		gameObject.layer = LayerMask.NameToLayer("PlayerDamage");
 		if (lifejudge == true){
@@ -162,7 +162,7 @@ public class PlayerScript : MonoBehaviour {
 		lifejudge = true;
 	}
 
-	void CallTitle() {
+	void CallTitle(){
 		if (Input.GetKeyDown("space")) {
 			SceneManager.LoadScene("Title");
 		}

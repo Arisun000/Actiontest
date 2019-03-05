@@ -3,8 +3,7 @@ using System.Collections;
 
 public class ExplosionScript : MonoBehaviour {
 
-	public void DeleteExplosion ()
-	{
+	public void DeleteExplosion (){
 		Destroy(gameObject);
 	}
 }

@@ -17,28 +17,23 @@ public class HealthScript : MonoBehaviour {
 
 	// プレイヤーの残り体力をUIに適用(PlayerControllerから呼び出される)
 	// 引数health : 残り体力
-	public void SetPlayerHealthUI (int health)
-	{
+	public void SetPlayerHealthUI (int health){
 			// 残り体力によって非表示にすべき体力アイコンを消去する
 			if (health == 3) fullObj_Health_3.SetActive(true);
-			if (health == 2)
-			{ // 体力2になった場合
+			if (health == 2){ // 体力2になった場合
 				 fullObj_Health_3.SetActive(false);
 				 fullObj_Health_2.SetActive(true);
 				 emptyObj_Health_3.SetActive(true);
-			}
 
-			else if (health == 1)
-			{ // 体力1になった場合
+			}else if (health == 1){ // 体力1になった場合
 				 fullObj_Health_2.SetActive(false);
 				 emptyObj_Health_2.SetActive(true);
-			}
-			else if (health == 0)
-			{ // 体力0になった場合
+
+			}else if (health == 0){ // 体力0になった場合
 				 fullObj_Health_1.SetActive(false);
 				 emptyObj_Health_1.SetActive(true);
 
-				if (gameOver == false) {
+				if (gameOver == false){
 					Instantiate (explosion, RisanuChan.transform.position + new Vector3 (0, 1, 0), RisanuChan.transform.rotation);
 				}
 				//ゲームオーバー判定をtrueにし、ユニティちゃんを消去
@@ -46,10 +41,8 @@ public class HealthScript : MonoBehaviour {
 			}
 	}
 
-	public void SetPlayerTimeUI (bool TimeOver)
-	{
-		if (TimeOver == true)
-		{
+	public void SetPlayerTimeUI (bool TimeOver){
+		if (TimeOver == true){
 			fullObj_Health_1.SetActive(false);
 			emptyObj_Health_1.SetActive(true);
 			fullObj_Health_2.SetActive(false);
@@ -60,24 +53,25 @@ public class HealthScript : MonoBehaviour {
 		}
 	}
 
-	void Update() {
+	void Update(){
 		//ゲームオーバー判定がtrueの時、
 		if (gameOver == true) {
+
 			//ゲームオーバーの文字を表示
 			gameOverText.enabled = true;
 			titletext.enabled = true;
+
 			//画面をクリックすると
 			CallTitle();
 		}
 	}
 
-	public void GameOver ()
-	{
+	public void GameOver (){
 		gameOver = true;
 		Destroy(RisanuChan);
 	}
 
-	void CallTitle() {
+	void CallTitle(){
 		if (Input.GetKeyDown("space")) {
 			SceneManager.LoadScene("Title");
 		}

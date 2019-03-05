@@ -12,18 +12,17 @@ public class Enemy1Script : MonoBehaviour {
 	private const string MAIN_CAMERA_TAG_NAME = "MainCamera";
 	private bool _isRendered = false;
 
-	void Start () {
+	void Start (){
 		rigidbody2D = GetComponent<Rigidbody2D>();
 	}
 	
-	void Update () {
+	void Update (){
 		if(_isRendered) {
 		 rigidbody2D.velocity = new Vector2 (transform.localScale.x * speed, rigidbody2D.velocity.y);
 		}
 	}
 	
-	void OnTriggerEnter2D (Collider2D col)
-	{
+	void OnTriggerEnter2D (Collider2D col){
 		if (col.tag == "Bullet") {
 			FindObjectOfType<ScoreScript>().Addpoint(10);
 			Destroy (gameObject);
@@ -31,8 +30,7 @@ public class Enemy1Script : MonoBehaviour {
 		}
 	}
 
-	void OnCollisionEnter2D (Collision2D col)
-	{	
+	void OnCollisionEnter2D (Collision2D col){	
 		if (col.gameObject.tag == "Block") {
 			Vector2 temp = gameObject.transform.localScale;
 			temp.x *= -1;
@@ -40,10 +38,9 @@ public class Enemy1Script : MonoBehaviour {
 		}
 	}
 
-		//Rendererがカメラに映ってる間に呼ばれ続ける
-	void OnWillRenderObject()
-	{
-    //メインカメラに映った時だけ_isRenderedをtrue
+	//Rendererがカメラに映ってる間に呼ばれ続ける
+	void OnWillRenderObject(){
+    	//メインカメラに映った時だけ_isRenderedをtrue
 		if(Camera.current.tag == MAIN_CAMERA_TAG_NAME){
 		_isRendered = true;
 		}
