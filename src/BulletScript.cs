@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+//new Branch check sentence
+
+using UnityEngine;
 using System.Collections;
 
 public class BulletScript: MonoBehaviour {
